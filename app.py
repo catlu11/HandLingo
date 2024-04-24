@@ -37,19 +37,17 @@ def stop_rec():
 	start_button.config(state="normal")
 	stop_button.config(state="disabled")
 
-	print('counter:', rand_counter)
-	print('recorded:', len(frames_list))
-
 	now = datetime.now()
 	dt_string = now.strftime("%d-%m-%Y_%H-%M-%S")
+	video_path = 'videos/' + dt_string + '.mp4'
 	fourcc = cv2.VideoWriter_fourcc("m", "p", "4", "v")
-	video_writer = cv2.VideoWriter((dt_string+'.mp4'), fourcc, 11.0, (int(capture.get(cv2.CAP_PROP_FRAME_WIDTH)), int(capture.get(cv2.CAP_PROP_FRAME_HEIGHT))))
+	video_writer = cv2.VideoWriter(video_path, fourcc, 11.0, (int(capture.get(cv2.CAP_PROP_FRAME_WIDTH)), int(capture.get(cv2.CAP_PROP_FRAME_HEIGHT))))
 	for frame in frames_list:
 		video_writer.write(frame)
 	video_writer.release()
 
 def start_rec():
-    global recording
+    global recordingx
     recording = True
 
     start_button.config(state="disabled")
