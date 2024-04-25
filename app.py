@@ -2,7 +2,9 @@ from tkinter import *
 import cv2
 from PIL import Image, ImageTk
 from datetime import datetime
+from gloss_recognition.I3D_pretrained import Sign2TextModel
 
+gloss_model = Sign2TextModel()
 app = Tk()
 app.title('HandLingo')
 app.bind('<Escape>', lambda x: app.quit())
@@ -46,8 +48,12 @@ def stop_rec():
 		video_writer.write(frame)
 	video_writer.release()
 
+	for label in gloss_model.get_prediction(video_path):
+		print(label)
+
 def start_rec():
-    global recordingx
+    global recording, frames_list
+    frames_list = []
     recording = True
 
     start_button.config(state="disabled")

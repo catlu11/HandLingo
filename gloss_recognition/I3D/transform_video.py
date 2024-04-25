@@ -76,8 +76,8 @@ def pad(imgs, total_frames):
                 pad_img = imgs[-1]
                 pad = np.tile(np.expand_dims(pad_img, axis=0), (num_padding, 1, 1, 1))
                 padded_imgs = np.concatenate([imgs, pad], axis=0)
-        else:
-            padded_imgs = imgs
+    else:
+        padded_imgs = imgs
     
     return padded_imgs
  
