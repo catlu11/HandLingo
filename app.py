@@ -7,6 +7,7 @@ from translation import Translation
 
 gloss_model = Sign2TextModel()
 translator = Translation()
+log_text = 'Log: '
 app = Tk()
 app.title('HandLingo')
 app.bind('<Escape>', lambda x: app.quit())
@@ -36,7 +37,7 @@ def update_frame():
 	app.after(40, update_frame)
 
 def stop_rec():
-	global recording
+	global recording, log_text
 	recording = False
 
 	start_button.config(state="normal")
@@ -52,8 +53,10 @@ def stop_rec():
 	video_writer.release()
 
 	global last_gloss
-	last_gloss = gloss_model.get_prediction(video_path)
+	last_gloss = gloss_model.get_prediction(video_path).strip()
 	print(last_gloss)
+	log_text += '\n\nGloss: ' + last_gloss
+	log_text_var.set(log_text)
 
 def start_rec():
     global recording, frames_list
@@ -82,20 +85,27 @@ languages_dropdown.pack()
 
 # Translates gloss to desire languauge
 def translate():
+	global log_text
 	if last_gloss is None:
-		print("Nothing to translate")
+		log_text += '\n\nNothing to translate'
+		log_text_var.set(log_text)
+		# log.pack(fill='both')
 	else:
 		lang = language_selected.get()
 		translated_txt = translator.get_translation(last_gloss, dest=languages_list[lang])
-		print(translated_txt)
+		log_text += '\nTranslated Text: ' + translated_txt
+		log_text_var.set(log_text)
+		# log.pack(fill='both')
 
 # Creates translate button
 translate_button = Button(app, text='Translate', command=translate)
 translate_button.pack()
 
 # Creates gloss and translation log
-log = Message(app, bd=2, bg='gray')
-log.pack(expand=True, fill="both")
+log_text_var = StringVar()
+log = Label(app, textvariable=log_text_var, anchor='w', justify="left")
+log_text_var.set(log_text)
+log.pack(fill='both')
 
 update_frame()
 
