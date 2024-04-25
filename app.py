@@ -3,8 +3,10 @@ import cv2
 from PIL import Image, ImageTk
 from datetime import datetime
 from gloss_recognition.I3D_pretrained import Sign2TextModel
+from translation import Translation
 
 gloss_model = Sign2TextModel()
+translator = Translation()
 app = Tk()
 app.title('HandLingo')
 app.bind('<Escape>', lambda x: app.quit())
@@ -12,6 +14,7 @@ app.bind('<Escape>', lambda x: app.quit())
 # Shows video feed and records when button is pressed 
 recording = False
 frames_list = []
+last_gloss = None
 
 video_label = Label(app)
 video_label.pack(side='left', padx=5, pady=5)
@@ -48,8 +51,9 @@ def stop_rec():
 		video_writer.write(frame)
 	video_writer.release()
 
-	for label in gloss_model.get_prediction(video_path):
-		print(label)
+	global last_gloss
+	last_gloss = gloss_model.get_prediction(video_path)
+	print(last_gloss)
 
 def start_rec():
     global recording, frames_list
@@ -70,26 +74,20 @@ stop_button = Button(app, text='Stop Recording', command=stop_rec, state="disabl
 stop_button.pack()
 
 # Creates language selector
-languages_list = [
-	'Afrikaans',
-	'Albanian',
-	'Chinese (simplified)',
-	'French',
-	'German',
-	'Korean',
-	'Latin',
-	'Norwegian',
-	'Serbian'
-]
+languages_list = {'Chinese (simplified)': 'zh-CN', 'Latin': 'la'}
 language_selected = StringVar(app)
-language_selected.set('Unselected')
-languages_dropdown = OptionMenu(app, language_selected, *languages_list)
+language_selected.set('Chinese (simplified)')
+languages_dropdown = OptionMenu(app, language_selected, *languages_list.keys())
 languages_dropdown.pack()
 
 # Translates gloss to desire languauge
 def translate():
-	print('translate to this language:')
-	print(language_selected.get())
+	if last_gloss is None:
+		print("Nothing to translate")
+	else:
+		lang = language_selected.get()
+		translated_txt = translator.get_translation(last_gloss, dest=languages_list[lang])
+		print(translated_txt)
 
 # Creates translate button
 translate_button = Button(app, text='Translate', command=translate)

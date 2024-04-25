@@ -27,4 +27,4 @@ class Sign2TextModel:
         per_frame_logits = self.model(inputs)
         predictions = torch.max(per_frame_logits, dim=2)[0]
         out_labels = np.argsort(predictions.cpu().detach().numpy()[0])
-        return [self.labels[i] for i in out_labels[-5:][::-1]]
+        return self.labels[out_labels[-1]]
