@@ -1,25 +1,26 @@
 import cv2
 import mediapipe as mp
 import csv
-import os
 
-def write_landmarks_to_csv(landmarks, frame_number, csv_data):
-    print(f"Landmark coordinates for frame {frame_number}:")
+def write_landmarks_to_csv(landmarks, frame_number, csv_data, landmark_type, empty=False):
     for idx, landmark in enumerate(landmarks):
-        if idx <= 24:
-            print(f"{mp_pose.PoseLandmark(idx).name}: (x: {landmark.x}, y: {landmark.y}, z: {landmark.z})")
-            csv_data.append([frame_number, mp_pose.PoseLandmark(idx).name, landmark.x, landmark.y, landmark.z])
-    print("\n")
+        if landmark_type == "POSE":
+            if 0 < idx <= 24:
+                csv_data.append([frame_number, mp_holistic.PoseLandmark(idx).name, landmark.x, landmark.y, landmark.z])
+        else:
+            if empty:
+                csv_data.append([frame_number, landmark_type + "_" + mp_holistic.HandLandmark(idx).name, 0, 0, 0])
+            else:
+                csv_data.append([frame_number, landmark_type + "_" + mp_holistic.HandLandmark(idx).name, landmark.x, landmark.y, landmark.z])
 
-# video_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'orange.mp4')
 video_path = "orange.mp4"
 output_csv = "output.csv"
 
 # Initialize MediaPipe Pose and Drawing utilities
-mp_pose = mp.solutions.pose
 mp_drawing = mp.solutions.drawing_utils
+mp_drawing_styles = mp.solutions.drawing_styles
 mp_holistic = mp.solutions.holistic
-pose = mp_pose.Pose()
+holistic = mp_holistic.Holistic()
 
 # Open the video file
 cap = cv2.VideoCapture(video_path)
@@ -36,22 +37,47 @@ while cap.isOpened():
     frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 
     # Process the frame with MediaPipe Pose
-    result = pose.process(frame_rgb)
+    result = holistic.process(frame_rgb)
 
-    # Draw the pose landmarks on the frame
-    if result.pose_landmarks:
-        mp_drawing.draw_landmarks(frame, result.pose_landmarks, mp_pose.POSE_CONNECTIONS)
+    # Draw the pose and hand landmarks on the frame
 
-        # Add the landmark coordinates to the list and print them
-        write_landmarks_to_csv(result.pose_landmarks.landmark, frame_number, csv_data)
+    if (result.left_hand_landmarks or result.right_hand_landmarks):
+        if result.left_hand_landmarks:
+            write_landmarks_to_csv(result.left_hand_landmarks.landmark, frame_number, csv_data, "LEFT") 
+        else:
+            write_landmarks_to_csv(mp_holistic.HandLandmark, frame_number, csv_data, "LEFT", empty=True)
 
-    # Display the frame
-    cv2.imshow('MediaPipe Pose', frame)
+        if result.right_hand_landmarks:
+            write_landmarks_to_csv(result.right_hand_landmarks.landmark, frame_number, csv_data, "RIGHT") 
+        else:
+            write_landmarks_to_csv(mp_holistic.HandLandmark, frame_number, csv_data, "RIGHT", empty=True)
+
+        if result.pose_landmarks:
+            write_landmarks_to_csv(result.pose_landmarks.landmark, frame_number, csv_data, "POSE")
+
+    # frame_rgb = cv2.cvtColor(frame_rgb, cv2.COLOR_RGB2BGR)
+
+    # # Draw face landmarks
+    # mp_drawing.draw_landmarks(frame_rgb, result.face_landmarks, mp_holistic.FACEMESH_CONTOURS)
+    
+    # # Right hand
+    # mp_drawing.draw_landmarks(frame_rgb, result.right_hand_landmarks, mp_holistic.HAND_CONNECTIONS)
+
+    # # Left Hand
+    # mp_drawing.draw_landmarks(frame_rgb, result.left_hand_landmarks, mp_holistic.HAND_CONNECTIONS)
+
+    # # Pose Detections
+    # mp_drawing.draw_landmarks(frame_rgb, result.pose_landmarks, mp_holistic.POSE_CONNECTIONS)
+                    
+
+    # # Display the frame
+    # cv2.imshow('MediaPipe', frame_rgb)
 
     frame_number += 1
 
 cap.release()
 cv2.destroyAllWindows()
+
 
 # Save the CSV data to a file
 with open(output_csv, 'w', newline='') as csvfile:
