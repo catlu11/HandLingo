@@ -2,7 +2,7 @@ from tkinter import *
 import cv2
 from PIL import Image, ImageTk
 from datetime import datetime
-from gloss_recognition.I3D_pretrained import Sign2TextModel
+from gloss_recognition.Transformer_nih import Sign2TextModel
 from translation import Translation
 
 gloss_model = Sign2TextModel()
