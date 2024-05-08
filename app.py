@@ -71,9 +71,9 @@ def closeWindow():
     app.destroy()
 
 # Creates buttons for video recording
-start_button = Button(app, text='Start Recording', command=start_rec)
+start_button = Button(app, text='Start Signing', command=start_rec)
 start_button.pack()
-stop_button = Button(app, text='Stop Recording', command=stop_rec, state="disabled")
+stop_button = Button(app, text='Stop Signing', command=stop_rec, state="disabled")
 stop_button.pack()
 
 # Creates language selector

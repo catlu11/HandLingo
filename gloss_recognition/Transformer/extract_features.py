@@ -26,8 +26,8 @@ def extract_keyframes(video_path):
             hist_curr = cv2.calcHist([curr_gray], [0], None, [256], [0,256])
 
             # Typecast for compareHist assertion
-            hist_prev = np.float32(hist_prev)
-            hist_curr = np.float32(hist_curr)
+            hist_prev = np.squeeze(np.float32(hist_prev))
+            hist_curr = np.squeeze(np.float32(hist_curr))
 
             # Compute histogram difference between successive frames
             hist_diff = euclidean(hist_prev, hist_curr)
