@@ -82,7 +82,8 @@ def write_landmarks_to_csv(landmarks, frame_number, csv_data, landmark_type, nor
 
 def pose_normalization(old_data, bounds):
     normalized = []
-    for feature in old_data:
+    lwx, lwy, rwx, rwy = None, None, None, None
+    for idx, feature in enumerate(old_data):
         frame_num, name, x, y = feature
         if x is None and y is None:
             new_x = 0
@@ -90,6 +91,18 @@ def pose_normalization(old_data, bounds):
         else:
             new_x = (x - bounds[frame_num][0]) / (bounds[frame_num][1] - bounds[frame_num][0])
             new_y = (y - bounds[frame_num][2]) / (bounds[frame_num][3] - bounds[frame_num][2])
+
+        if (idx % 118) == 17:
+            lwx, lwy = new_x, new_y
+        if (idx % 118) == 38:
+            rwx, rwy = new_x, new_y
+        if (idx % 118) > 17 and (idx % 118) < 38:
+            new_x -= lwx
+            new_y -= lwy
+        if (idx % 118) > 38:
+            new_x -= rwx
+            new_y -= rwy
+
         normalized.append([frame_num, name, new_x, new_y])
     return normalized
 

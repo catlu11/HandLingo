@@ -23,7 +23,7 @@ class Sign2TextModel:
     
     def __init__(self):
         model = Transformer()
-        model.load_state_dict(torch.load("gloss_recognition/Transformer/best_epoch.pt")['model_state_dict'])
+        model.load_state_dict(torch.load("gloss_recognition/Transformer/best_epoch_wrist.pt")['model_state_dict'])
         self.model = model
         self.model.eval()
 
