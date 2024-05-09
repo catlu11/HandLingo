@@ -77,7 +77,7 @@ stop_button = Button(app, text='Stop Recording', command=stop_rec, state="disabl
 stop_button.pack()
 
 # Creates language selector
-languages_list = {'Chinese (simplified)': 'zh-CN', 'Latin': 'la'}
+languages_list = {'Chinese (simplified)': {"trans": 'zh-CN', "tts": 'zh'}, 'Latin': {"trans": "la", "tts": "en"}}
 language_selected = StringVar(app)
 language_selected.set('Chinese (simplified)')
 languages_dropdown = OptionMenu(app, language_selected, *languages_list.keys())
@@ -92,9 +92,10 @@ def translate():
 		# log.pack(fill='both')
 	else:
 		lang = language_selected.get()
-		translated_txt = translator.get_translation(last_gloss, dest=languages_list[lang])
+		translated_txt = translator.get_translation(last_gloss, dest=languages_list[lang]['trans'])
 		log_text += '\nTranslated Text: ' + translated_txt
 		log_text_var.set(log_text)
+		translator.play_tts(translated_txt, languages_list[lang]['tts'])
 		# log.pack(fill='both')
 
 # Creates translate button
