@@ -7,7 +7,9 @@ Supported languages include Chinese (Simplified), Latin, and German. Due to mode
 
 ### Prerequisites
 This project was developed in Python 3.9. To install requisite packages with pip, please run `pip install -r requirements.txt`
-or ensure that all version requirements in `requirements.txt` are met. Your environment should also have access to a webcam and microphone.
+or ensure that all version requirements in `requirements.txt` are met. 
+
+You should also have access to a webcam (in the event that HandLingo does not pick up your camera feed, please change line 22 in `app.py` from index 0 to the appropriate index).
 
 ### Installation
 1. Clone the repo: `git clone https://github.com/catlu11/HandLingo.git`
