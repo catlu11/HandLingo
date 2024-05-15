@@ -131,8 +131,6 @@ def translate():
 
 languages_list = {'Chinese (simplified)': {"trans": 'zh-CN', "tts": 'zh'}, 
 				  'Latin': {"trans": "la", "tts": "en"},
-				  'French': {"trans": "fr", "tts": "fr"},
-				  'Korean': {"trans": "kr", "tts": "kr"},
 				  'German': {"trans": "de", "tts": "de"}}
 language_selected = customtkinter.StringVar(value="Select Language")
 languages_dropdown = customtkinter.CTkOptionMenu(app, width=430, values=list(languages_list.keys()), variable=language_selected)

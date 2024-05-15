@@ -1,7 +1,6 @@
 from googletrans import Translator
 from gtts import gTTS
 from pygame import mixer
-import os
 
 class Translation:
 	def __init__(self):
