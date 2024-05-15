@@ -31,3 +31,7 @@ or ensure that all version requirements in `requirements.txt` are met. Your envi
 ├──README.md
 └──LICENSE
 ```
+
+## Acknowledgments
+- WLASL dataset: https://github.com/dxli94/WLASL
+- Transformer code: https://towardsdatascience.com/a-detailed-guide-to-pytorchs-nn-transformer-module-c80afbc9ffb1
