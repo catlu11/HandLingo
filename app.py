@@ -39,7 +39,7 @@ def update_frame():
 	_, frame = capture.read()
 	opencv_image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGBA)
 	captured_image = Image.fromarray(opencv_image)
-	captured_image = captured_image.resize((900, 550))
+	captured_image = captured_image.resize((650, 400))
 	if recording:
 		frames_list.append(frame)
 	tk_img = ImageTk.PhotoImage(image=captured_image)
@@ -80,7 +80,7 @@ def stop_rec():
 	else:
 		tn_row += 1
 		tn_col = 0
-	thumbnail_frame = cv2.resize(frames_list[len(frames_list)//2], (180, 120))
+	thumbnail_frame = cv2.resize(frames_list[len(frames_list)//2], (130, 80))
 	opencv_thumbnail = cv2.cvtColor(thumbnail_frame, cv2.COLOR_BGR2RGBA)
 	captured_thumbnail = Image.fromarray(opencv_thumbnail)
 	tk_thumbnail = ImageTk.PhotoImage(image=captured_thumbnail)
@@ -94,9 +94,9 @@ def closeWindow():
     stop_rec()
     app.destroy()
 
-start_button = customtkinter.CTkButton(app, width=430, text="Start Signing", command=start_rec)
+start_button = customtkinter.CTkButton(app, width=280, text="Start Signing", command=start_rec)
 start_button.grid(row=0, column=0, columnspan=2, padx=5, pady=5, sticky='ns')
-stop_button = customtkinter.CTkButton(app, width=430, text='Stop Signing', command=stop_rec, state="disabled")
+stop_button = customtkinter.CTkButton(app, width=280, text='Stop Signing', command=stop_rec, state="disabled")
 stop_button.grid(row=0, column=2, columnspan=2, padx=5, pady=5, sticky='ns')
 
 # Translates gloss to desire languauge
@@ -133,14 +133,14 @@ languages_list = {'Chinese (simplified)': {"trans": 'zh-CN', "tts": 'zh'},
 				  'Latin': {"trans": "la", "tts": "en"},
 				  'German': {"trans": "de", "tts": "de"}}
 language_selected = customtkinter.StringVar(value="Select Language")
-languages_dropdown = customtkinter.CTkOptionMenu(app, width=430, values=list(languages_list.keys()), variable=language_selected)
+languages_dropdown = customtkinter.CTkOptionMenu(app, width=305, values=list(languages_list.keys()), variable=language_selected)
 languages_dropdown.grid(row=4, column=0, columnspan=2, padx=5, pady=5, sticky='ns')
 
-translate_button = customtkinter.CTkButton(app, width=430, text='Translate', command=translate)
+translate_button = customtkinter.CTkButton(app, width=305, text='Translate', command=translate)
 translate_button.grid(row=4, column=2, columnspan=2, padx=5, pady=5, sticky='ns')
 
 # Creates gloss and translation log
-log = customtkinter.CTkLabel(app, width=600, text=log_text, anchor='nw', justify="left")
+log = customtkinter.CTkLabel(app, width=400, text=log_text, anchor='nw', justify="left")
 log.grid(row=1, column=4, columnspan=5, rowspan=5, padx=5, pady=5, sticky='nsew')
 
 # thumbnail placeholder
@@ -148,11 +148,11 @@ for i in range(2, 4):
 	for j in range(4):
 		tn_placeholder_label = customtkinter.CTkLabel(app, text='')
 		tn_placeholder_label.grid(row=i, column=j)
-		array = np.full((120, 180, 3), 43, dtype=np.uint8)
+		array = np.full((80, 130, 3), 43, dtype=np.uint8)
 		img = Image.fromarray(array)
 		tn_placeholder = ImageTk.PhotoImage(image=img)
 		tn_placeholder_label.tn_placeholder = tn_placeholder
-		tn_placeholder_label.configure(image=tn_placeholder, width=180, height=120)
+		tn_placeholder_label.configure(image=tn_placeholder, width=120, height=80)
 
 update_frame()
 
